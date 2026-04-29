@@ -1,11 +1,9 @@
 from __future__ import annotations
-
 from pathlib import Path
 from typing import Iterable
-
 import fitz
-from langchain.schema import Document
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_core.documents import Document
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
 from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
 
@@ -53,7 +51,6 @@ class RAGService:
         if not chunks:
             return 0
         self.vector_store.add_documents(chunks)
-        self.vector_store.persist()
         return len(chunks)
 
     def _build_context(self, docs: list[Document]) -> str:
