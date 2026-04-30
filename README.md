@@ -91,14 +91,44 @@ Open: `http://localhost:3000`
 - `POST /ask/stream` -> token streaming (SSE) with citations at end
 - `GET /health` -> health check
 
+## Architecture
+
+See `docs/architecture.md` for the system flow diagram.
+
+## Sample Questions
+
+Try these after uploading a document:
+
+- What is the main objective of this document?
+- List the key deliverables and deadlines.
+- What risks or constraints are mentioned?
+- Summarize responsibilities by stakeholder/team.
+- Which section discusses payment terms or pricing?
+
+## Screenshots
+
+Add screenshots for stronger GitHub presentation:
+
+- `docs/screenshots/upload.png` (upload success state)
+- `docs/screenshots/answer.png` (answer + citations)
+- `docs/screenshots/streaming.png` (token streaming in progress)
+
+## Deployment Links
+
+Replace placeholders after deployment:
+
+- Frontend (Vercel): `https://your-frontend.vercel.app`
+- Backend (Render): `https://your-backend.onrender.com`
+- API health check: `https://your-backend.onrender.com/health`
+
 ## Resume Bullet (Use this)
 
 Built a RAG Document Q&A System using LangChain + Gemini 2.0 Flash + ChromaDB with page-level citations and streaming-ready backend endpoints. Developed FastAPI backend and Next.js frontend and prepared deployment flow for Render (API) and Vercel (UI).
 
 ## GitHub Showcase Checklist
 
-- [ ] Add architecture diagram in `docs/architecture.png`
-- [ ] Add sample questions and screenshots in `README`
+- [x] Add architecture diagram in `docs/architecture.md`
+- [x] Add sample questions and screenshots in `README`
 - [ ] Record a 60-90 second demo video
 - [ ] Add deployment links (Vercel + Render)
 - [ ] Pin this repository on your GitHub profile

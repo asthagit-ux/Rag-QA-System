@@ -5,22 +5,119 @@
 body {
   margin: 0;
   font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: #f6f7fb;
-  color: #111827;
+  color: #e6ebff;
+  background: radial-gradient(circle at 20% 20%, #24387f 0%, #121733 35%, #090d1f 100%);
+  min-height: 100vh;
 }
 
-main {
-  max-width: 900px;
+.app-shell {
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 24px 16px 48px;
+  padding: 40px 18px 56px;
 }
 
 .card {
-  background: #fff;
-  border: 1px solid #e5e7eb;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(130, 151, 255, 0.04));
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 18px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(8px);
+}
+
+.hero {
+  padding: 26px;
+  margin-bottom: 18px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: #9db2ff;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+h1 {
+  margin: 0 0 10px;
+  font-size: clamp(1.7rem, 2.4vw, 2.5rem);
+  line-height: 1.15;
+}
+
+h2 {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+h3 {
+  margin-bottom: 8px;
+}
+
+.hero-text {
+  margin: 0;
+  color: #b7c2ef;
+  max-width: 72ch;
+  line-height: 1.6;
+}
+
+.hero-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.metric {
+  border: 1px solid rgba(196, 210, 255, 0.22);
   border-radius: 12px;
-  padding: 16px;
+  padding: 12px 14px;
+  background: rgba(8, 15, 36, 0.42);
+}
+
+.metric-label {
+  display: block;
+  color: #aebbe8;
+  font-size: 0.78rem;
+  margin-bottom: 5px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
   margin-bottom: 16px;
+}
+
+.panel {
+  padding: 20px;
+}
+
+.panel-text {
+  color: #b7c2ef;
+  margin-top: 0;
+  line-height: 1.5;
+}
+
+.stack {
+  display: grid;
+  gap: 12px;
+}
+
+.file-picker {
+  border: 1px dashed rgba(195, 209, 255, 0.4);
+  background: rgba(10, 18, 43, 0.45);
+  border-radius: 12px;
+  padding: 14px;
+  color: #ccd7ff;
+  cursor: pointer;
+}
+
+.file-picker input {
+  display: none;
+}
+
+.upload-meta {
+  margin: 12px 0 0;
+  color: #aebbe8;
 }
 
 input,
@@ -31,11 +128,23 @@ textarea {
 
 button {
   border: 0;
-  border-radius: 8px;
+  border-radius: 10px;
   background: #4f46e5;
   color: #fff;
-  padding: 10px 14px;
+  padding: 11px 15px;
   cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-primary {
+  background: linear-gradient(120deg, #5661ff 0%, #7c5dff 100%);
+  box-shadow: 0 10px 24px rgba(77, 88, 255, 0.42);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 26px rgba(94, 98, 255, 0.5);
 }
 
 button:disabled {
@@ -45,12 +154,71 @@ button:disabled {
 
 textarea {
   width: 100%;
-  min-height: 90px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  padding: 10px;
+  min-height: 110px;
+  border: 1px solid rgba(197, 208, 255, 0.28);
+  border-radius: 12px;
+  padding: 12px;
+  background: rgba(12, 18, 43, 0.5);
+  color: #e9edff;
+  resize: vertical;
 }
 
-ul {
-  padding-left: 18px;
+textarea::placeholder {
+  color: #9eb0ea;
+}
+
+.result-card {
+  margin-bottom: 16px;
+}
+
+.status-pill {
+  display: inline-block;
+  margin-top: 0;
+  margin-bottom: 14px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(89, 113, 255, 0.22);
+  border: 1px solid rgba(180, 195, 255, 0.25);
+  color: #d7e0ff;
+}
+
+.answer-text {
+  line-height: 1.7;
+  color: #f3f6ff;
+}
+
+.citation-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.citation-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(196, 209, 255, 0.2);
+  background: rgba(11, 20, 47, 0.4);
+}
+
+.source {
+  color: #eef2ff;
+  font-weight: 500;
+}
+
+.page {
+  color: #b8c4ef;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 900px) {
+  .hero-metrics,
+  .grid {
+    grid-template-columns: 1fr;
+  }
 }

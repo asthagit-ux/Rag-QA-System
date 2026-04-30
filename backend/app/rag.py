@@ -11,7 +11,8 @@ from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGener
 class RAGService:
     def __init__(self, persist_dir: str = "chroma_db") -> None:
         self.persist_dir = persist_dir
-        self.embeddings = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004")
+        # Use the current Gemini embedding model.
+        self.embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
         self.vector_store = Chroma(
             collection_name="rag_documents",
             embedding_function=self.embeddings,
@@ -63,6 +64,8 @@ class RAGService:
 
     def answer(self, question: str, k: int = 4) -> tuple[str, list[dict]]:
         docs = self.vector_store.similarity_search(question, k=k)
+        if not docs:
+            return "I could not find this in the uploaded documents.", []
         context = self._build_context(docs)
         prompt = (
             "You are a precise document QA assistant.\n"
@@ -81,6 +84,8 @@ class RAGService:
 
     def stream_answer(self, question: str, k: int = 4) -> tuple[Iterable[str], list[dict]]:
         docs = self.vector_store.similarity_search(question, k=k)
+        if not docs:
+            return iter(["I could not find this in the uploaded documents."]), []
         context = self._build_context(docs)
         prompt = (
             "You are a precise document QA assistant.\n"
