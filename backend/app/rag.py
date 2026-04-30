@@ -12,7 +12,7 @@ class RAGService:
     def __init__(self, persist_dir: str = "chroma_db") -> None:
         self.persist_dir = persist_dir
         # Use the current Gemini embedding model.
-        self.embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
+        self.embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-004")
         self.vector_store = Chroma(
             collection_name="rag_documents",
             embedding_function=self.embeddings,
