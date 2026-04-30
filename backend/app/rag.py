@@ -62,8 +62,32 @@ class RAGService:
             lines.append(f"[Chunk {i} | {source} p.{page}]\n{doc.page_content}")
         return "\n\n".join(lines)
 
+    def retrieve(self, question: str, k: int = 4) -> list[Document]:
+        return self.vector_store.similarity_search(question, k=k)
+
+    def build_citations(self, docs: list[Document]) -> list[dict]:
+        return [{"source": d.metadata.get("source", "unknown"), "page": d.metadata.get("page", "N/A")} for d in docs]
+
+    def retrieval_fallback_answer(self, question: str, docs: list[Document]) -> str:
+        if not docs:
+            return "I could not find this in the uploaded documents."
+
+        snippets: list[str] = []
+        for idx, doc in enumerate(docs[:3], start=1):
+            source = doc.metadata.get("source", "unknown")
+            page = doc.metadata.get("page", "N/A")
+            excerpt = " ".join(doc.page_content.split())
+            excerpt = excerpt[:260] + ("..." if len(excerpt) > 260 else "")
+            snippets.append(f"- Source {idx}: {source} (page {page}) -> {excerpt}")
+
+        return (
+            "Gemini quota is currently exhausted, so this answer is retrieval-only.\n"
+            f"Best matching content for your question '{question}':\n"
+            + "\n".join(snippets)
+        )
+
     def answer(self, question: str, k: int = 4) -> tuple[str, list[dict]]:
-        docs = self.vector_store.similarity_search(question, k=k)
+        docs = self.retrieve(question, k=k)
         if not docs:
             return "I could not find this in the uploaded documents.", []
         context = self._build_context(docs)
@@ -76,14 +100,11 @@ class RAGService:
             "Return concise answer with bullet points when useful."
         )
         response = self.llm.invoke(prompt)
-        citations = [
-            {"source": d.metadata.get("source", "unknown"), "page": d.metadata.get("page", "N/A")}
-            for d in docs
-        ]
+        citations = self.build_citations(docs)
         return response.content, citations
 
     def stream_answer(self, question: str, k: int = 4) -> tuple[Iterable[str], list[dict]]:
-        docs = self.vector_store.similarity_search(question, k=k)
+        docs = self.retrieve(question, k=k)
         if not docs:
             return iter(["I could not find this in the uploaded documents."]), []
         context = self._build_context(docs)
@@ -95,10 +116,7 @@ class RAGService:
             f"Context:\n{context}\n\n"
             "Return concise answer with bullet points when useful."
         )
-        citations = [
-            {"source": d.metadata.get("source", "unknown"), "page": d.metadata.get("page", "N/A")}
-            for d in docs
-        ]
+        citations = self.build_citations(docs)
 
         def token_stream() -> Iterable[str]:
             for chunk in self.llm.stream(prompt):

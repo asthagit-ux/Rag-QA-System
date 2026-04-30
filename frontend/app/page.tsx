@@ -66,11 +66,11 @@ export default function HomePage() {
   return (
     <main className="app-shell">
       <section className="hero card">
-        <p className="eyebrow">Portfolio-Ready GenAI Project</p>
-        <h1>RAG Document Q&A System</h1>
+        <p className="eyebrow">Document Intelligence Assistant</p>
+        <h1>Document Q&A with Source Citations</h1>
         <p className="hero-text">
-          Upload a PDF, ask natural-language questions, and get grounded answers with citations.
-          Built with FastAPI, LangChain, Gemini, and ChromaDB.
+          Analyze documents faster with grounded answers and page-level evidence. Upload a PDF,
+          ask a question, and review traceable citations in seconds.
         </p>
         <div className="hero-metrics">
           <div className="metric">
@@ -90,8 +90,10 @@ export default function HomePage() {
 
       <section className="grid">
         <section className="card panel">
-          <h2>1) Upload PDF</h2>
-          <p className="panel-text">Choose a text-based PDF and index it for semantic retrieval.</p>
+          <h2>Upload Document</h2>
+          <p className="panel-text">
+            Select a text-based PDF to index and prepare for semantic search.
+          </p>
           <form onSubmit={onUpload} className="stack">
             <label className="file-picker">
               <input
@@ -102,20 +104,20 @@ export default function HomePage() {
               <span>{file ? file.name : "Select a PDF file"}</span>
             </label>
             <button className="btn-primary" disabled={loadingUpload} type="submit">
-              {loadingUpload ? "Uploading..." : "Upload + Index"}
+              {loadingUpload ? "Indexing..." : "Upload and Index"}
             </button>
           </form>
           {uploadedFileName ? (
             <p className="upload-meta">
-              Latest indexed file: <strong>{uploadedFileName}</strong>
+              Active document: <strong>{uploadedFileName}</strong>
             </p>
           ) : null}
         </section>
 
         <section className="card panel">
-          <h2>2) Ask Question</h2>
+          <h2>Ask a Question</h2>
           <p className="panel-text">
-            Ask in plain English. The response streams token-by-token for a live demo effect.
+            Ask in natural language and review answers with source-backed citations.
           </p>
           <form onSubmit={onAsk} className="stack">
             <textarea
@@ -124,14 +126,14 @@ export default function HomePage() {
               onChange={(e) => setQuestion(e.target.value)}
             />
             <button className="btn-primary" disabled={loadingAsk} type="submit">
-              {loadingAsk ? "Streaming..." : "Get Answer"}
+              {loadingAsk ? "Generating..." : "Generate Answer"}
             </button>
           </form>
         </section>
       </section>
 
       <section className="card panel result-card">
-        <h2>Result</h2>
+        <h2>Response</h2>
         <p className="status-pill">{status || "No activity yet."}</p>
         {answer ? (
           <>

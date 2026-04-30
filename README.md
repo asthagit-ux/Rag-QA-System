@@ -5,7 +5,7 @@ Upload PDFs -> ask questions -> get answers with page citations.
 This is a beginner-friendly, portfolio-ready GenAI project using a fully free stack:
 
 - LLM: Gemini 2.0 Flash
-- Embeddings: `text-embedding-004`
+- Embeddings: `gemini-embedding-001`
 - Vector DB: ChromaDB (local)
 - Backend: FastAPI + LangChain
 - Frontend: Next.js
@@ -120,6 +120,38 @@ Replace placeholders after deployment:
 - Frontend (Vercel): `https://your-frontend.vercel.app`
 - Backend (Render): `https://your-backend.onrender.com`
 - API health check: `https://your-backend.onrender.com/health`
+
+## Deployment (Render + Vercel)
+
+### Backend on Render
+
+This repo includes `render.yaml` for one-click setup.
+
+Manual service config:
+
+- Runtime: Python
+- Root directory: `backend`
+- Build command: `pip install -r requirements.txt`
+- Start command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+- Environment variable: `GOOGLE_API_KEY=<your_key>`
+
+### Frontend on Vercel
+
+- Import this repo in Vercel
+- Set root directory to `frontend`
+- Framework preset: Next.js
+- Environment variable:
+  - `NEXT_PUBLIC_API_URL=https://your-backend.onrender.com`
+
+After deploy, verify:
+
+- `GET /health` on backend returns `{"status":"ok"}`
+- Frontend can upload a PDF and call `/ask` or `/ask/stream`
+
+## Troubleshooting
+
+- If upload works but answer fails with `Gemini API quota exceeded`, your key has no available generation quota.
+- Wait for quota reset or switch to a key/project with active Gemini quota and billing.
 
 ## Resume Bullet (Use this)
 

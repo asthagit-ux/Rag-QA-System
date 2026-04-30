@@ -71,10 +71,10 @@ async def ask_question(payload: dict) -> dict:
     except Exception as exc:
         message = str(exc)
         if "RESOURCE_EXHAUSTED" in message or "quota" in message.lower():
-            raise HTTPException(
-                status_code=429,
-                detail="Gemini API quota exceeded. Please wait and retry, or use a key with available quota.",
-            ) from exc
+            docs = rag_service.retrieve(question=question)
+            answer = rag_service.retrieval_fallback_answer(question=question, docs=docs)
+            citations = rag_service.build_citations(docs)
+            return {"answer": answer, "citations": citations, "fallback": True}
         raise HTTPException(status_code=500, detail=f"Question failed: {message}") from exc
 
 
@@ -84,6 +84,11 @@ async def ask_question_stream(payload: dict) -> StreamingResponse:
     if not question:
         raise HTTPException(status_code=400, detail="Question is required.")
 
+    docs = rag_service.retrieve(question=question)
+    citations = rag_service.build_citations(docs)
+    fallback_text = rag_service.retrieval_fallback_answer(question=question, docs=docs)
+    fallback_used = False
+
     try:
         stream, citations = rag_service.stream_answer(question=question)
     except HTTPException:
@@ -91,15 +96,30 @@ async def ask_question_stream(payload: dict) -> StreamingResponse:
     except Exception as exc:
         message = str(exc)
         if "RESOURCE_EXHAUSTED" in message or "quota" in message.lower():
-            raise HTTPException(
-                status_code=429,
-                detail="Gemini API quota exceeded. Please wait and retry, or use a key with available quota.",
-            ) from exc
-        raise HTTPException(status_code=500, detail=f"Streaming failed: {message}") from exc
+            fallback_used = True
+
+            def fallback_stream():
+                for token in fallback_text.split(" "):
+                    yield f"{token} "
+
+            stream = fallback_stream()
+        else:
+            raise HTTPException(status_code=500, detail=f"Streaming failed: {message}") from exc
 
     def event_stream():
-        for token in stream:
-            yield f"data: {json.dumps({'token': token})}\n\n"
-        yield f"data: {json.dumps({'done': True, 'citations': citations})}\n\n"
+        nonlocal fallback_used
+        try:
+            for token in stream:
+                yield f"data: {json.dumps({'token': token})}\n\n"
+        except Exception as exc:
+            message = str(exc)
+            if "RESOURCE_EXHAUSTED" in message or "quota" in message.lower():
+                fallback_used = True
+                for token in fallback_text.split(" "):
+                    yield f"data: {json.dumps({'token': f'{token} '})}\n\n"
+            else:
+                raise
+
+        yield f"data: {json.dumps({'done': True, 'citations': citations, 'fallback': fallback_used})}\n\n"
 
     return StreamingResponse(event_stream(), media_type="text/event-stream")
