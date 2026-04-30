@@ -23,8 +23,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-upload_dir = Path("uploads")
-upload_dir.mkdir(exist_ok=True)
+upload_dir = Path("/tmp/uploads")
+upload_dir.mkdir(exist_ok=True, parents=True)
 
 rag_service = RAGService()
 
