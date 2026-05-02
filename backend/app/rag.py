@@ -13,7 +13,7 @@ class RAGService:
         self.persist_dir = persist_dir
         # Use the current Gemini embedding model.
         self.embeddings = GoogleGenerativeAIEmbeddings(
-          model="models/text-embedding-004",
+          model="models/embedding-001",
           client_options={"api_endpoint": "generativelanguage.googleapis.com"},
           transport="rest"
         ) 
