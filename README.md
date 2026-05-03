@@ -105,13 +105,6 @@ Try these after uploading a document:
 - Summarize responsibilities by stakeholder/team.
 - Which section discusses payment terms or pricing?
 
-## Screenshots
-
-Add screenshots for stronger GitHub presentation:
-
-- `docs/screenshots/upload.png` (upload success state)
-- `docs/screenshots/answer.png` (answer + citations)
-- `docs/screenshots/streaming.png` (token streaming in progress)
 
 ## Deployment Links
 
@@ -153,19 +146,8 @@ After deploy, verify:
 - If upload works but answer fails with `Gemini API quota exceeded`, your key has no available generation quota.
 - Wait for quota reset or switch to a key/project with active Gemini quota and billing.
 
-## Resume Bullet (Use this)
 
-Built a RAG Document Q&A System using LangChain + Gemini 2.0 Flash + ChromaDB with page-level citations and streaming-ready backend endpoints. Developed FastAPI backend and Next.js frontend and prepared deployment flow for Render (API) and Vercel (UI).
-
-## GitHub Showcase Checklist
-
-- [x] Add architecture diagram in `docs/architecture.md`
-- [x] Add sample questions and screenshots in `README`
-- [ ] Record a 60-90 second demo video
-- [ ] Add deployment links (Vercel + Render)
-- [ ] Pin this repository on your GitHub profile
-
-## Next upgrades (good for interviews)
+## Next upgrades 
 
 - multi-file upload and file management
 - citation highlighting in PDF viewer
