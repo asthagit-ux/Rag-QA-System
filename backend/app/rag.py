@@ -5,18 +5,14 @@ import fitz
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
-from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
-
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 class RAGService:
     def __init__(self, persist_dir: str = "chroma_db") -> None:
         self.persist_dir = persist_dir
-        # Use the current Gemini embedding model.
-        self.embeddings = GoogleGenerativeAIEmbeddings(
-          model="models/embedding-001",
-          client_options={"api_endpoint": "generativelanguage.googleapis.com"},
-          transport="rest"
-        ) 
+        # Local sentence-transformers model (same embedder used for index + query).
+        self.embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
         self.vector_store = Chroma(
             collection_name="rag_documents",
             embedding_function=self.embeddings,
