@@ -155,6 +155,4 @@ After deploy, verify:
 - hybrid search (keyword + vector)
 - auth + per-user document spaces
 
----
 
-If you are new, start by getting local upload + question answering working first. That alone is a strong project.
